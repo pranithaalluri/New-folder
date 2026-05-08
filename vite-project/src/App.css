@@ -1,20 +1,22 @@
 .scene {
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
   position: relative;
+  overflow: hidden;
+  /* background-color: #348C31; */
 }
 
 .grass-layer {
-  width: 160vw;
-  height: 160vh;
   position: absolute;
-  top: -30vh;
-  left: -30vw;
-  background-image: url('/images/imageGrassTile.png');
+  top: -10%; 
+  left: -10%;
+  width: 120%;
+  height: 120%;
+  
+  background-image: url('/images/imageTile.png');
   background-repeat: repeat;
-  background-size: 500px 500px;
-  background-position: -25px -25px;
-  /* will-change: transform; */
-  /* transition: transform 0.12s ease-out; */
+  /* background-size: 500px 500px; */
+  /* will-change: background-position;
+  image-rendering: auto;  */
+  /* background-size: 502px 502px; */
 }
