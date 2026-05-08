@@ -6,23 +6,23 @@ function App() {
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      // Sensitivity math: larger numbers = slower movement
-      const x = (e.clientX - window.innerWidth / 2) / 15
-      const y = (e.clientY - window.innerHeight / 2) / 15
+      const x = (e.clientX - window.innerWidth / 2) / 10
+      const y = (e.clientY - window.innerHeight / 2) / 10
       setOffset({ x, y })
     }
-
     window.addEventListener('mousemove', handleMouseMove)
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
 
   return (
-    <div 
-      className="grass-field" 
-      style={{ 
-        transform: `translate3d(${offset.x}px, ${offset.y}px, 0)` 
-      }}
-    ></div>
+    <div className="scene">
+      <div
+        className="grass-layer"
+        style={{
+          transform: `translate3d(${offset.x}px, ${offset.y}px, 0)`
+        }}
+      />
+    </div>
   )
 }
 
