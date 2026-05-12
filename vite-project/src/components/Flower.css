@@ -1,9 +1,51 @@
-.flowers-layer {
+.flower-wrapper {
   position: absolute;
-  inset: 0;
-  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  pointer-events: all;
 }
 
-.scene {
-  background: #7bb661;
+.flower-thought {
+  margin-bottom: 2px;
+  font-family: 'Caveat', cursive;
+  font-size: 0.95rem;
+  color: #2e2e2e;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+  max-width: 110px;
+  line-height: 1.1;
+  pointer-events: none;
+  opacity: 0.78;
+}
+
+.flower-area {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flower-shadow {
+  position: absolute;
+  bottom: -4px;
+  border-radius: 50%;
+  filter: blur(4px);
+  z-index: -1;
+}
+
+.flower-image {
+  object-fit: contain;
+  image-rendering: pixelated;
+  opacity: 0.96;
+}
+
+.flower-water {
+  margin-top: 2px;
+  font-family: 'Caveat', cursive;
+  font-size: 0.82rem;
+  color: #2f6ea3;
+  opacity: 0.82;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.6);
 }

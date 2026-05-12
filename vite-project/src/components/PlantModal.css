@@ -1,0 +1,133 @@
+.plant-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.08);
+
+  backdrop-filter: blur(2px);
+}
+
+.plant-modal {
+  width: 340px;
+
+  padding: 28px;
+
+  border-radius: 22px;
+
+  background: #f6f1e7;
+
+  border: 1px solid rgba(120, 90, 50, 0.12);
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.12),
+    0 2px 6px rgba(0,0,0,0.08);
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.plant-modal-header {
+  text-align: center;
+}
+
+.plant-modal-emoji {
+  font-size: 1.7rem;
+  margin-bottom: 4px;
+}
+
+.plant-modal-header h2 {
+  font-family: 'Klee One', cursive;
+  font-size: 1.5rem;
+  font-weight: 400;
+
+  color: #4b3d2f;
+}
+
+.plant-modal-header p {
+  margin-top: 2px;
+
+  font-family: 'Caveat', cursive;
+  font-size: 1rem;
+
+  color: #8d7d6d;
+}
+
+.plant-modal-input {
+  width: 100%;
+  height: 110px;
+
+  resize: none;
+  outline: none;
+
+  padding: 14px;
+
+  border-radius: 16px;
+
+  border: 1px solid rgba(120, 90, 50, 0.14);
+
+  background: rgba(255,255,255,0.45);
+
+  font-family: 'Caveat', cursive;
+  font-size: 1.15rem;
+
+  color: #3a3028;
+
+  line-height: 1.5;
+}
+
+.plant-modal-input::placeholder {
+  color: #9d9387;
+}
+
+.plant-modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.plant-modal-actions button {
+  border: none;
+  cursor: pointer;
+
+  border-radius: 14px;
+
+  padding: 10px 14px;
+
+  transition: 0.2s ease;
+}
+
+.plant-modal-cancel {
+  flex: 1;
+
+  background: transparent;
+
+  border: 1px solid rgba(120, 90, 50, 0.14) !important;
+
+  font-family: 'Caveat', cursive;
+  font-size: 1rem;
+
+  color: #8a7767;
+}
+
+.plant-modal-submit {
+  flex: 2;
+
+  background: #79b36b;
+
+  font-family: 'Klee One', cursive;
+  font-size: 1rem;
+
+  color: white;
+
+  box-shadow: 0 3px 10px rgba(80,140,70,0.18);
+}
+
+.plant-modal-submit:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
