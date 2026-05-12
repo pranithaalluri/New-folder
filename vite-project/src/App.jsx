@@ -177,11 +177,6 @@ export default function App() {
         </AnimatePresence>
       </div>
 
-      {/* Hint */}
-      <div className="hint-text">
-        click anywhere to plant a thought 🌱
-      </div>
-
       {/* Plant Modal */}
       {modal && (
         <PlantModal

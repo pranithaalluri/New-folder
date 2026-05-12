@@ -23,12 +23,15 @@ export default function Flower({ flower, offset, onClick }) {
   const screenX = flower.worldX + offset.x
   const screenY = flower.worldY + offset.y
 
-  const size = flower.waterCount >= 10 ? 72
-    : flower.waterCount >= 3 ? 56
-    : 40
-
-  const isRare = flower.waterCount >= 10
   const isBlooming = flower.waterCount >= 3
+  const isRare = flower.waterCount >= 10
+
+  const size =
+    flower.waterCount >= 10
+      ? 88
+      : flower.waterCount >= 3
+      ? 68
+      : 48
 
   return (
     <motion.div
@@ -42,90 +45,153 @@ export default function Flower({ flower, offset, onClick }) {
         alignItems: 'center',
         cursor: 'pointer',
         pointerEvents: 'all',
-        zIndex: 10,
+        zIndex: isRare ? 30 : 12,
       }}
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      transition={{ type: 'spring', stiffness: 200, damping: 12 }}
+      transition={{
+        type: 'spring',
+        stiffness: 220,
+        damping: 14,
+      }}
       onClick={(e) => {
         e.stopPropagation()
         onClick(flower)
       }}
     >
-      {/* Glow for rare flowers */}
-      {isRare && (
-        <motion.div
-          style={{
-            position: 'absolute',
-            width: size + 100,
-            height: size + 100,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(255,220,100,0.4) 0%, transparent 70%)',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            zIndex: -1,
-          }}
-          animate={{ scale: [1, 1.3, 1], opacity: [0.6, 1, 0.6] }}
-          transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-        />
-      )}
-
-      {/* Flower image with sway */}
-      <motion.img
-        src={`/images/flowers/${flower.flowerType}.png`}
-        alt={flower.flowerType}
+       <div
         style={{
-          width: size,
-          height: size,
-          imageRendering: 'pixelated',
-          filter: isRare
-            ? 'drop-shadow(0 0 8px rgba(255,200,50,0.9))'
-            : isBlooming
-            ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
-            : 'drop-shadow(0 1px 2px rgba(0,0,0,0.2))',
+          position: 'absolute',
+          bottom: -6,
+          width: size * 0.45,
+          height: 10,
+          background: 'rgba(0,0,0,0.18)',
+          borderRadius: '50%',
+          filter: 'blur(4px)',
+          zIndex: -1,
         }}
-        animate={{ rotate: [-2, 2, -2] }}
-        transition={{ repeat: Infinity, duration: 3 + Math.random() * 2, ease: 'easeInOut' }}
       />
-
-      {/* Thought preview */}
+      {/* THOUGHT BUBBLE */}
       <motion.div
-        initial={{ opacity: 0, y: 4 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
         style={{
-          marginTop: 4,
-          background: 'rgba(255,255,255,0.82)',
-          backdropFilter: 'blur(4px)',
-          borderRadius: 10,
-          padding: '2px 8px',
+          marginBottom: 4,
           fontFamily: "'Caveat', cursive",
-          fontSize: '0.72rem',
-          color: '#3a3a3a',
-          maxWidth: 90,
+          fontSize: '1rem',
+          color: '#2f2f2f',
           textAlign: 'center',
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          boxShadow: '0 1px 4px rgba(0,0,0,0.12)',
+          textShadow: '0 1px 2px rgba(255,255,255,0.7)',
+          maxWidth: 120,
+          lineHeight: 1.1,
           pointerEvents: 'none',
         }}
       >
         {flower.message}
       </motion.div>
 
-      {/* Water count badge */}
+      {/* FLOWER AREA */}
+      <div
+        style={{
+          position: 'relative',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {isRare && (
+          <motion.div
+            style={{
+              position: 'absolute',
+              width: size + 90,
+              height: size + 90,
+              borderRadius: '50%',
+              background:
+                'radial-gradient(circle, rgba(255,220,120,0.45) 0%, transparent 72%)',
+            }}
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.5, 1, 0.5],
+            }}
+            transition={{
+              duration: 2.5,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          />
+        )}
+
+        {/* Bloom aura */}
+        {isBlooming && !isRare && (
+          <motion.div
+            style={{
+              position: 'absolute',
+              width: size + 40,
+              height: size + 40,
+              borderRadius: '50%',
+              background:
+                'radial-gradient(circle, rgba(255,170,210,0.22) 0%, transparent 70%)',
+            }}
+            animate={{
+              scale: [1, 1.08, 1],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+            }}
+          />
+        )}
+
+        {/* Flower */}
+        <motion.img
+          src={`/images/flowers/${flower.flowerType}.png`}
+          alt={flower.flowerType}
+          style={{
+            width: size,
+            height: size,
+            objectFit: 'contain',
+            imageRendering: 'pixelated',
+            filter: isRare
+              ? 'drop-shadow(0 0 14px rgba(255,210,100,0.95))'
+              : isBlooming
+              ? 'drop-shadow(0 6px 12px rgba(0,0,0,0.28))'
+              : 'drop-shadow(0 4px 8px rgba(0,0,0,0.18))',
+          }}
+          animate={{
+            rotate: [-2, 2, -2],
+            y: [0, -2, 0],
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: 4,
+            ease: 'easeInOut',
+          }}
+        />
+      </div>
+
+      {/* WATER COUNT */}
       {flower.waterCount > 0 && (
-        <div style={{
-          fontFamily: "'Caveat', cursive",
-          fontSize: '0.65rem',
-          color: 'rgba(255,255,255,0.9)',
-          textShadow: '0 1px 3px rgba(0,0,0,0.4)',
-          marginTop: 2,
-        }}>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          style={{
+            marginTop: 10,
+            padding: '4px 10px',
+            borderRadius: 999,
+            background: 'rgba(60,140,210,0.14)',
+            backdropFilter: 'blur(6px)',
+            fontFamily: "'Caveat', cursive",
+            fontSize: '0.9rem',
+            color: '#2c6ea8',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+          }}
+        >
           💧 {flower.waterCount}
-        </div>
+        </motion.div>
       )}
     </motion.div>
   )

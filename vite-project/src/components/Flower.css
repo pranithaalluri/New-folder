@@ -1,0 +1,9 @@
+.flowers-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.scene {
+  background: #7bb661;
+}
