@@ -1,12 +1,8 @@
 import { useState, useRef } from 'react'
 import { AnimatePresence } from 'framer-motion'
-
-import './GardenPage.css'
-
 import Flower from '../components/Flower'
 import PlantModal from '../components/PlantModal'
-import ThoughtPopup from '../components/ThoughtPopup'
-
+import './GardenPage.css'
 export default function GardenPage() {
   const [offset, setOffset] = useState({ x: 0, y: 0 })
 
@@ -16,8 +12,6 @@ export default function GardenPage() {
 
   const [modal, setModal] = useState(null)
 
-  const [selectedFlower, setSelectedFlower] = useState(null)
-
   const startPos = useRef({ x: 0, y: 0 })
 
   const startOffset = useRef({ x: 0, y: 0 })
@@ -25,14 +19,22 @@ export default function GardenPage() {
   const didDrag = useRef(false)
 
   // Drag start
-const handleMouseDown = (e) => {
-  if (modal || selectedFlower) return  
-  e.preventDefault()
-  setIsDragging(true)
-  didDrag.current = false             
-  startPos.current = { x: e.clientX, y: e.clientY }
-  startOffset.current = { ...offset }
-}
+  const handleMouseDown = (e) => {
+    if (modal) return
+
+    e.preventDefault()
+
+    setIsDragging(true)
+
+    didDrag.current = false
+
+    startPos.current = {
+      x: e.clientX,
+      y: e.clientY,
+    }
+
+    startOffset.current = { ...offset }
+  }
 
   // Drag move
   const handleMouseMove = (e) => {
@@ -65,7 +67,7 @@ const handleMouseDown = (e) => {
     setModal({
       worldX,
       worldY,
-      selectedFlower: null
+      selectedFlower: null,
     })
   }
 
@@ -113,71 +115,59 @@ const handleMouseDown = (e) => {
         return flower
       })
     })
-
-    setSelectedFlower((prevSelectedFlower) => {
-      if (!prevSelectedFlower) return null
-
-      if (prevSelectedFlower.id === flowerId) {
-        return {
-          ...prevSelectedFlower,
-          waterCount: prevSelectedFlower.waterCount + 1,
-        }
-      }
-
-      return prevSelectedFlower
-    })
   }
 
   return (
+  <div
+    className="garden-scene"
+    onMouseLeave={() => {
+      setIsDragging(false)
+      didDrag.current = false
+    }}
+  >
+    {/* INTERACTIVE BACKGROUND */}
     <div
-      className="garden-scene"
+      className="garden-background"
       style={{
         cursor: isDragging ? 'grabbing' : 'grab',
       }}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
-      onMouseLeave={() => {setIsDragging(false),didDrag.current = false} }
     >
-
       <div
         className="garden-grass"
         style={{
           backgroundPosition: `${offset.x}px ${offset.y}px`,
         }}
       />
-
-      <div className="garden-flowers">
-        <AnimatePresence>
-          {flowers.map((flower) => {
-            return (
-              <Flower
-                key={flower.id}
-                flower={flower}
-                offset={offset}
-                onClick={setSelectedFlower}
-              />
-            )
-          })}
-        </AnimatePresence>
-      </div>
-
-      {modal && (
-        <PlantModal
-  modal={modal}
-  setModal={setModal}
-  onPlant={handlePlant}
-  onClose={() => setModal(null)}
-/>
-      )}
-
-      {selectedFlower && (
-        <ThoughtPopup
-          flower={selectedFlower}
-          onClose={() => setSelectedFlower(null)}
-          onWater={handleWater}
-        />
-      )}
     </div>
-  )
+
+    {/* FLOWERS */}
+    <div className="garden-flowers">
+      <AnimatePresence>
+        {flowers.map((flower) => {
+          return (
+            <Flower
+              key={flower.id}
+              flower={flower}
+              offset={offset}
+              onWater={handleWater}
+            />
+          )
+        })}
+      </AnimatePresence>
+    </div>
+
+    {/* MODAL */}
+    {modal && (
+      <PlantModal
+        modal={modal}
+        setModal={setModal}
+        onPlant={handlePlant}
+        onClose={() => setModal(null)}
+      />
+    )}
+  </div>
+)
 }
