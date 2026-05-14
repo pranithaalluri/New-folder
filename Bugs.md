@@ -46,6 +46,8 @@ Lesson learned
 
 Visual bugs are not always CSS bugs. Sometimes they are world-space logic problems.
 
+
+
 **2. Random Flower Positioning Problem**
 Problem
 
@@ -88,3 +90,7 @@ random flower generation → user-selected flower placement
 Lesson learned
 
 Different sprites need their own visual configuration.
+
+**3. INSERT CARAT COMING ASIDE FLOWERS**
+
+parent level component of this flower is written as clickable selectable it gives that 
