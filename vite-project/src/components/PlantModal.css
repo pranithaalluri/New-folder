@@ -8,8 +8,6 @@
   justify-content: center;
 
   background: rgba(0, 0, 0, 0.08);
-
-  backdrop-filter: blur(2px);
 }
 
 .plant-modal {
@@ -64,7 +62,7 @@
 
   resize: none;
   outline: none;
-
+caret-color: #3a3028;
   padding: 14px;
 
   border-radius: 16px;

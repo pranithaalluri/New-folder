@@ -3,7 +3,7 @@ import { AnimatePresence } from 'framer-motion'
 
 import './GardenPage.css'
 
-import Flower, { getRandomFlower } from '../components/Flower'
+import Flower from '../components/Flower'
 import PlantModal from '../components/PlantModal'
 import ThoughtPopup from '../components/ThoughtPopup'
 
@@ -26,10 +26,10 @@ export default function GardenPage() {
 
   // Drag start
 const handleMouseDown = (e) => {
-  if (modal || selectedFlower) return  // ← ignore clicks when modal is open
+  if (modal || selectedFlower) return  
   e.preventDefault()
   setIsDragging(true)
-  didDrag.current = false              // ← this already resets, so drag detection is fine
+  didDrag.current = false             
   startPos.current = { x: e.clientX, y: e.clientY }
   startOffset.current = { ...offset }
 }
@@ -65,6 +65,7 @@ const handleMouseDown = (e) => {
     setModal({
       worldX,
       worldY,
+      selectedFlower: null
     })
   }
 
@@ -82,7 +83,7 @@ const handleMouseDown = (e) => {
 
       waterCount: 0,
 
-      flowerType: getRandomFlower(),
+      flowerType: modal.selectedFlower,
 
       createdAt: new Date().toISOString(),
     }
@@ -138,7 +139,7 @@ const handleMouseDown = (e) => {
       onMouseUp={handleMouseUp}
       onMouseLeave={() => {setIsDragging(false),didDrag.current = false} }
     >
-      {/* Grass */}
+
       <div
         className="garden-grass"
         style={{
@@ -146,7 +147,6 @@ const handleMouseDown = (e) => {
         }}
       />
 
-      {/* Flowers */}
       <div className="garden-flowers">
         <AnimatePresence>
           {flowers.map((flower) => {
@@ -162,15 +162,15 @@ const handleMouseDown = (e) => {
         </AnimatePresence>
       </div>
 
-      {/* Plant modal */}
       {modal && (
         <PlantModal
-          onPlant={handlePlant}
-          onClose={() => setModal(null)}
-        />
+  modal={modal}
+  setModal={setModal}
+  onPlant={handlePlant}
+  onClose={() => setModal(null)}
+/>
       )}
 
-      {/* Thought popup */}
       {selectedFlower && (
         <ThoughtPopup
           flower={selectedFlower}

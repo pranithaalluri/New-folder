@@ -1,6 +1,13 @@
 import { motion } from 'framer-motion'
 import './Flower.css'
-
+const FLOWER_SIZES = {
+  SunflowerOUTLINED: 52,
+  TulipOUTLINED: 36,
+  RoseOUTLINED: 40,
+  DaisyOUTLINED: 34,
+  LavenderOUTLINED: 38,
+  LilyOUTLINED: 42,
+}
 const FLOWER_TYPES = [
   'CosmoOUTLINED',
   'DaffodilOUTLINED',
@@ -16,9 +23,9 @@ const FLOWER_TYPES = [
   'TulipOUTLINED',
 ]
 
-export function getRandomFlower() {
-  return FLOWER_TYPES[Math.floor(Math.random() * FLOWER_TYPES.length)]
-}
+// export function getRandomFlower() {
+//   return FLOWER_TYPES[Math.floor(Math.random() * FLOWER_TYPES.length)]
+// }
 
 export default function Flower({ flower, offset, onClick }) {
   const screenX = flower.worldX + offset.x
@@ -27,12 +34,8 @@ export default function Flower({ flower, offset, onClick }) {
   const isBlooming = flower.waterCount >= 3
   const isRare = flower.waterCount >= 10
 
-  const size =
-    flower.waterCount >= 10
-      ? 48
-      : flower.waterCount >= 3
-      ? 40
-      : 32
+const size =
+  FLOWER_SIZES[flower.flowerType] || 40
 
   return (
     <motion.div
@@ -40,7 +43,8 @@ export default function Flower({ flower, offset, onClick }) {
       style={{
         left: screenX,
         top: screenY,
-        transform: 'translate(-50%, -100%)',
+        transform: 'translateX(-50%)',
+        marginTop: -size,
         zIndex: isRare ? 20 : 10,
       }}
       initial={{ opacity: 0, scale: 0.8 }}
@@ -51,12 +55,10 @@ export default function Flower({ flower, offset, onClick }) {
         onClick(flower)
       }}
     >
-      {/* Thought */}
       <div className="flower-thought">
         {flower.message}
       </div>
 
-      {/* Flower */}
       <div className="flower-area">
 
         {(isRare || isBlooming) && (
@@ -88,7 +90,6 @@ export default function Flower({ flower, offset, onClick }) {
         />
       </div>
 
-      {/* Water */}
       {flower.waterCount > 0 && (
         <div className="flower-water">
           💧 {flower.waterCount}

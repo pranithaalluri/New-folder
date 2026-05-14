@@ -2,8 +2,14 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 
 import './PlantModal.css'
-
-export default function PlantModal({ onPlant, onClose }) {
+const FLOWER_TYPES = [
+  'TulipOUTLINED',
+  'RoseOUTLINED',
+  'SunflowerOUTLINED',
+  'DaisyOUTLINED',
+]
+export default function PlantModal({ onPlant, onClose,modal,
+  setModal }) {
   const [message, setMessage] = useState('')
 
   const handlePlant = () => {
@@ -47,7 +53,27 @@ export default function PlantModal({ onPlant, onClose }) {
               leave something in the field
             </p>
           </div>
-
+<div className="flower-picker">
+  {FLOWER_TYPES.map((flowerType) => (
+    <button
+      key={flowerType}
+      type="button"
+      onClick={() =>
+        setModal({
+          ...modal,
+          selectedFlower: flowerType,
+        })
+      }
+    >
+      <img
+        src={`/images/flowers/${flowerType}.png`}
+        width="40"
+      />
+    </button>
+  ))}
+</div>
+{modal.selectedFlower && (
+<>
           <textarea
             autoFocus
             value={message}
@@ -61,7 +87,7 @@ export default function PlantModal({ onPlant, onClose }) {
               }
             }}
           />
-
+</>)}
           <div className="plant-modal-actions">
             <button
               className="plant-modal-cancel"
