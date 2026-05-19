@@ -45,3 +45,167 @@
   width: 100%;
   height: 100%;
 } */
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+
+:root {
+  --font-game: 'Fredoka', sans-serif;
+  --color-beige-light: #fdfaf2;
+  --color-beige-dark: #e8dfca;
+  --color-brown-text: #5d4037;
+  --color-green-leaf: #78c257;
+  --color-pink-wander: #ff7096;
+}
+
+.garden-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(93, 64, 55, 0.4);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+.animal-crossing-popup {
+  font-family: var(--font-game);
+  background: var(--color-beige-light);
+  border: 4px solid var(--color-brown-text);
+  border-radius: 24px;
+  width: 90%;
+  max-width: 410px;
+  overflow: hidden;
+  box-shadow: 0 10px 0px var(--color-beige-dark), 0 15px 25px rgba(0,0,0,0.15);
+  animation: modalBounceIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.15) forwards;
+}
+
+@keyframes modalBounceIn {
+  0% { transform: scale(0.9) translateY(20px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.modal-tabs {
+  display: flex;
+  background: var(--color-beige-dark);
+  border-bottom: 4px solid var(--color-brown-text);
+}
+
+.modal-tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 14px;
+  font-family: var(--font-game);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-brown-text);
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.modal-tab-btn.active-tab {
+  opacity: 1;
+  background: var(--color-beige-light);
+  margin-bottom: -4px;
+  padding-bottom: 18px;
+  border-bottom: 4px solid var(--color-beige-light);
+}
+
+.modal-content {
+  padding: 24px;
+  text-align: center;
+}
+
+.modal-headline {
+  color: var(--color-brown-text);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.input-field-block {
+  text-align: left;
+  margin-bottom: 14px;
+}
+
+.field-label {
+  display: block;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--color-brown-text);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.game-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 3px solid var(--color-brown-text);
+  border-radius: 12px;
+  background: #ffffff;
+  font-family: var(--font-game);
+  color: var(--color-brown-text);
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.game-input:focus {
+  border-color: var(--color-green-leaf);
+}
+
+.game-submit-btn, .wanderer-escape-btn {
+  width: 100%;
+  padding: 12px;
+  font-family: var(--font-game);
+  font-weight: 700;
+  font-size: 1rem;
+  border: 3px solid var(--color-brown-text);
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+.game-submit-btn {
+  background: var(--color-green-leaf);
+  color: #ffffff;
+  box-shadow: 0 4px 0 var(--color-brown-text);
+  margin-top: 6px;
+}
+
+.game-submit-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--color-brown-text);
+}
+
+.modal-divider {
+  margin: 14px 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-brown-text);
+  opacity: 0.35;
+}
+
+.wanderer-escape-btn {
+  background: var(--color-pink-wander);
+  color: #ffffff;
+  box-shadow: 0 4px 0 var(--color-brown-text);
+}
+
+.wanderer-escape-btn:hover {
+  animation: escapeWobble 0.25s infinite alternate ease-in-out;
+}
+
+.wanderer-escape-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--color-brown-text);
+}
+
+@keyframes escapeWobble {
+  0% { transform: rotate(-1deg); }
+  100% { transform: rotate(1deg); }
+}
+
+.error-banner-text {
+  margin: 0 0 12px 0;
+}
