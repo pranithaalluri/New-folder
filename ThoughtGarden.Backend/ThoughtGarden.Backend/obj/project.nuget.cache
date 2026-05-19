@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "8upnzCuNq7w=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Pranitha Alluri\\Desktop\\New folder\\ThoughtGarden.Backend\\ThoughtGarden.Backend\\ThoughtGarden.Backend.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Pranitha Alluri\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.15\\microsoft.aspnetcore.openapi.9.0.15.nupkg.sha512",
+    "C:\\Users\\Pranitha Alluri\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}

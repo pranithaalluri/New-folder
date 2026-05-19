@@ -1,9 +1,12 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import Flower from '../components/Flower'
 import PlantModal from '../components/PlantModal'
+import { getFlowerThoughts, createFlowerThought } from '../api/flowerApi'
 import './GardenPage.css'
+
 export default function GardenPage() {
+
   const [offset, setOffset] = useState({ x: 0, y: 0 })
 
   const [isDragging, setIsDragging] = useState(false)
@@ -18,8 +21,47 @@ export default function GardenPage() {
 
   const didDrag = useRef(false)
 
+  // LOAD FLOWERS FROM BACKEND
+  useEffect(() => {
+
+    async function loadFlowers() {
+
+      try {
+
+        const data = await getFlowerThoughts()
+
+        // Map backend data to frontend structure
+        const mappedFlowers = data.map((flower) => ({
+          id: flower.id,
+
+          message: flower.thought,
+
+          flowerType: flower.flowerType,
+
+          worldX: flower.worldX || 300,
+
+          worldY: flower.worldY || 300,
+
+          waterCount: flower.waterCount || 0,
+
+          createdAt: flower.createdAt,
+        }))
+
+        setFlowers(mappedFlowers)
+
+      } catch (error) {
+
+        console.error('Failed to load flowers:', error)
+      }
+    }
+
+    loadFlowers()
+
+  }, [])
+
   // Drag start
   const handleMouseDown = (e) => {
+
     if (modal) return
 
     e.preventDefault()
@@ -38,9 +80,11 @@ export default function GardenPage() {
 
   // Drag move
   const handleMouseMove = (e) => {
+
     if (!isDragging) return
 
     const dx = e.clientX - startPos.current.x
+
     const dy = e.clientY - startPos.current.y
 
     if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
@@ -55,6 +99,7 @@ export default function GardenPage() {
 
   // Drag end
   const handleMouseUp = (e) => {
+
     if (!isDragging) return
 
     setIsDragging(false)
@@ -62,6 +107,7 @@ export default function GardenPage() {
     if (didDrag.current) return
 
     const worldX = e.clientX - offset.x
+
     const worldY = e.clientY - offset.y
 
     setModal({
@@ -71,41 +117,74 @@ export default function GardenPage() {
     })
   }
 
-  // Plant flower
-  const handlePlant = (message) => {
+  // PLANT FLOWER
+  const handlePlant = async (message) => {
+
     if (!modal) return
 
-    const newFlower = {
-      id: Date.now(),
+    try {
 
-      message,
+      // Object sent to backend
+      const flowerRequest = {
 
-      worldX: modal.worldX,
-      worldY: modal.worldY,
+        flowerType: modal.selectedFlower,
 
-      waterCount: 0,
+        thought: message,
 
-      flowerType: modal.selectedFlower,
+        userId: 1,
 
-      createdAt: new Date().toISOString(),
+        worldX: modal.worldX,
+
+        worldY: modal.worldY,
+      }
+
+      // Save to backend
+      const savedFlower = await createFlowerThought(flowerRequest)
+
+      // Convert backend response for frontend
+      const newFlower = {
+
+        id: savedFlower.id,
+
+        message: savedFlower.thought,
+
+        flowerType: savedFlower.flowerType,
+
+        worldX: savedFlower.worldX,
+
+        worldY: savedFlower.worldY,
+
+        waterCount: savedFlower.waterCount || 0,
+
+        createdAt: savedFlower.createdAt,
+      }
+
+      setFlowers((prevFlowers) => {
+
+        return [...prevFlowers, newFlower]
+      })
+
+      setIsDragging(false)
+
+      didDrag.current = false
+
+      setModal(null)
+
+    } catch (error) {
+
+      console.error('Failed to plant flower:', error)
     }
-
-    setFlowers((prevFlowers) => {
-      return [...prevFlowers, newFlower]
-    })
-
-    setIsDragging(false)
-
-    didDrag.current = false
-
-    setModal(null)
   }
 
   // Water flower
   const handleWater = (flowerId) => {
+
     setFlowers((prevFlowers) => {
+
       return prevFlowers.map((flower) => {
+
         if (flower.id === flowerId) {
+
           return {
             ...flower,
             waterCount: flower.waterCount + 1,
@@ -118,56 +197,67 @@ export default function GardenPage() {
   }
 
   return (
-  <div
-    className="garden-scene"
-    onMouseLeave={() => {
-      setIsDragging(false)
-      didDrag.current = false
-    }}
-  >
-    {/* INTERACTIVE BACKGROUND */}
     <div
-      className="garden-background"
-      style={{
-        cursor: isDragging ? 'grabbing' : 'grab',
+      className="garden-scene"
+      onMouseLeave={() => {
+
+        setIsDragging(false)
+
+        didDrag.current = false
       }}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
     >
+
+      {/* INTERACTIVE BACKGROUND */}
       <div
-        className="garden-grass"
+        className="garden-background"
         style={{
-          backgroundPosition: `${offset.x}px ${offset.y}px`,
+          cursor: isDragging ? 'grabbing' : 'grab',
         }}
-      />
-    </div>
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+      >
 
-    {/* FLOWERS */}
-    <div className="garden-flowers">
-      <AnimatePresence>
-        {flowers.map((flower) => {
-          return (
-            <Flower
-              key={flower.id}
-              flower={flower}
-              offset={offset}
-              onWater={handleWater}
-            />
-          )
-        })}
-      </AnimatePresence>
-    </div>
+        <div
+          className="garden-grass"
+          style={{
+            backgroundPosition: `${offset.x}px ${offset.y}px`,
+          }}
+        />
 
-    {/* MODAL */}
-    {modal && (
-      <PlantModal
-        modal={modal}
-        setModal={setModal}
-        onPlant={handlePlant}
-        onClose={() => setModal(null)}
-      />
-    )}
-  </div>
-)
+      </div>
+
+      {/* FLOWERS */}
+      <div className="garden-flowers">
+
+        <AnimatePresence>
+
+          {flowers.map((flower) => {
+
+            return (
+              <Flower
+                key={flower.id}
+                flower={flower}
+                offset={offset}
+                onWater={handleWater}
+              />
+            )
+          })}
+
+        </AnimatePresence>
+
+      </div>
+
+      {/* MODAL */}
+      {modal && (
+        <PlantModal
+          modal={modal}
+          setModal={setModal}
+          onPlant={handlePlant}
+          onClose={() => setModal(null)}
+        />
+      )}
+
+    </div>
+  )
 }
