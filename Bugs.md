@@ -94,3 +94,9 @@ Different sprites need their own visual configuration.
 **3. INSERT CARAT COMING ASIDE FLOWERS**
 
 parent level component of this flower is written as clickable selectable it gives that 
+
+resolved by css code
+
+
+**4.World coordinates are unable to be persisted to backend(after the backend connection was successfull)**
+
