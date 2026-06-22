@@ -129,3 +129,79 @@ caret-color: #3a3028;
   opacity: 0.45;
   cursor: not-allowed;
 }
+.flower-option {
+  width: 58px;
+  height: 58px;
+
+  padding: 0;
+
+  border: 1px solid #8d8578;
+
+  background:
+    linear-gradient(
+      to bottom,
+      #f7f4ec 0%,
+      #ece4d8 100%
+    );
+
+  cursor: pointer;
+
+  image-rendering: pixelated;
+
+  transition:
+    transform 0.12s ease,
+    filter 0.12s ease,
+    background 0.12s ease;
+
+  position: relative;
+}
+
+.flower-option:hover {
+  filter: brightness(1.04);
+
+  transform:
+    translateY(-1px)
+    rotate(-1deg);
+}
+
+.flower-option.selected {
+  background:
+    linear-gradient(
+      to bottom,
+      #dff0d2 0%,
+      #cde7bb 100%
+    );
+
+  border: 1px solid #5f8b4c;
+
+  transform:
+    translateY(1px)
+    rotate(-2deg)
+    scale(1.03);
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.4),
+    0 0 8px rgba(130,180,90,0.25);
+}
+
+.flower-option.selected::after {
+  content: '★';
+
+  position: absolute;
+
+  top: -7px;
+  right: -5px;
+
+  font-size: 0.85rem;
+
+  color: #f5b942;
+
+  text-shadow:
+    1px 1px 0 #7b5b22;
+}
+
+.flower-option img {
+  image-rendering: pixelated;
+
+  transform: scale(1.05);
+}

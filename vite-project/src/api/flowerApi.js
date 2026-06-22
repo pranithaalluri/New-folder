@@ -2,83 +2,178 @@ const BASE_URL = "https://localhost:65037/api";
 
 export const USE_DUMMY_DATA = true;
 
-// Helper to grab token safely from browser storage
+// ─────────────────────────────────────────────
+// AUTH HEADERS
+// ─────────────────────────────────────────────
+
 const getAuthHeaders = () => {
-    const token = localStorage.getItem('gardener_token');
-    return token ? { 'Authorization': `Bearer ${token}` } : {};
+    const token = localStorage.getItem("gardener_token");
+
+    return token
+        ? { Authorization: `Bearer ${token}` }
+        : {};
 };
 
-// 1. GET ALL FLOWERS
-export async function getFlowerThoughts() {
+// ─────────────────────────────────────────────
+// GET ALL FLOWERS
+// GET /api/flowers
+// ─────────────────────────────────────────────
+
+export async function getFlowerThoughts(page = 1, limit = 20) {
+
     if (USE_DUMMY_DATA) {
         return [
-            { id: '1', thought: 'Hello from mock garden!', flowerType: 'DaffodilOUTLINED', worldX: 200, worldY: 150, waterCount: 2, createdAt: new Date() },
-            { id: '2', thought: 'Silly wanderer path.', flowerType: 'LavenderOUTLINED', worldX: 450, worldY: 300, waterCount: 0, createdAt: new Date() }
+            {
+                id: "1",
+                flowerType: "LilyOfTheValleyOUTLINED",
+                thought: "Hello from mock garden!",
+                isAnonymous: false,
+                authorName: "MockUser",
+                createdAt: new Date().toISOString(),
+                worldX:200,
+                worldY:200
+            },
+            {
+                id: "2",
+                flowerType: "LavenderOUTLINED",
+                thought: "Silly wanderer path.",
+                isAnonymous: true,
+                authorName: null,
+                createdAt: new Date().toISOString()
+            }
         ];
     }
 
-    const response = await fetch(`${BASE_URL}/FlowerThoughts`);
+    const response = await fetch(
+        `${BASE_URL}/flowers?page=${page}&limit=${limit}`
+    );
+
     if (!response.ok) {
-        throw new Error("Failed to fetch thoughts");
+        throw new Error("Failed to fetch flowers");
     }
+
     return response.json();
 }
 
-// 2. CREATE / PLANT A FLOWER
+// ─────────────────────────────────────────────
+// CREATE / PLANT FLOWER
+// POST /api/flowers
+// ─────────────────────────────────────────────
+
 export async function createFlowerThought(data) {
+
     if (USE_DUMMY_DATA) {
         return {
             id: crypto.randomUUID(),
-            thought: data.thought,
             flowerType: data.flowerType,
-            worldX: data.worldX,
-            worldY: data.worldY,
-            waterCount: 0,
+            thought: data.thought,
+            isAnonymous: data.isAnonymous,
+            authorName: "MockUser",
+            moderationStatus: "Approved",
             createdAt: new Date().toISOString()
         };
     }
 
-    const response = await fetch(`${BASE_URL}/FlowerThoughts`, {
+    const response = await fetch(`${BASE_URL}/flowers`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            ...getAuthHeaders() // Attaches your JWT Bearer token here
+            ...getAuthHeaders()
         },
         body: JSON.stringify(data)
     });
 
+    const responseData = await response.json();
+
     if (!response.ok) {
-        throw new Error("Failed to create thought");
+        throw new Error(responseData.message || "Failed to plant flower");
     }
 
-    return response.json();
-} 
+    return responseData;
+}
 
-// 3. NEW AUTHENTICATION CALLS (Maps directly to your C# AuthController)
+// ─────────────────────────────────────────────
+// LOGIN / REGISTER
+// POST /api/auth/login
+// POST /api/auth/register
+// ─────────────────────────────────────────────
+
 export async function authAccount(endpoint, bodyData) {
+
     if (USE_DUMMY_DATA) {
-        return { token: 'mock-valid-jwt-string', user: { username: bodyData.username || 'Wanderer' } };
+        return {
+            token: "mock-valid-jwt-string",
+            user: {
+                id: crypto.randomUUID(),
+                username: bodyData.username || "Wanderer",
+                email: bodyData.email
+            }
+        };
     }
 
-    // endpoint will be either "login" or "register"
     const response = await fetch(`${BASE_URL}/auth/${endpoint}`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json"
         },
         body: JSON.stringify(bodyData)
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-        const errorData = await response.json();
-        // Throws the exact conflict/unauthorized message from your backend
-        throw new Error(errorData.message || 'Authentication error.');
+        throw new Error(data.message || "Authentication failed");
     }
 
-    const data = await response.json();
-    
-    // Save the returned token to localStorage upon successful login/registration
-    localStorage.setItem('gardener_token', data.token);
-    
+    // SAVE TOKEN
+    localStorage.setItem("gardener_token", data.token);
+
+    // SAVE USER
+    localStorage.setItem(
+        "gardener_user",
+        JSON.stringify(data.user)
+    );
+
     return data;
+}
+
+// ─────────────────────────────────────────────
+// GET MY FLOWERS
+// GET /api/flowers/mine
+// ─────────────────────────────────────────────
+
+export async function getMyFlowers() {
+
+    const response = await fetch(`${BASE_URL}/flowers/mine`, {
+        headers: {
+            ...getAuthHeaders()
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch your flowers");
+    }
+
+    return response.json();
+}
+
+// ─────────────────────────────────────────────
+// DELETE FLOWER
+// DELETE /api/flowers/:id
+// ─────────────────────────────────────────────
+
+export async function deleteFlower(id) {
+
+    const response = await fetch(`${BASE_URL}/flowers/${id}`, {
+        method: "DELETE",
+        headers: {
+            ...getAuthHeaders()
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to delete flower");
+    }
+
+    return true;
 }

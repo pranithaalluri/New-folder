@@ -10,5 +10,6 @@ export const FLOWER_TYPES = [
   'PoppyOUTLINED',
   'RoseOUTLINED',
   'SunflowerOUTLINED',
-  'TulipOUTLINED',
+  'TulipOUTLINED'
+
 ]

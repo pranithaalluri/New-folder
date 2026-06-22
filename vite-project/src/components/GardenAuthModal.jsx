@@ -19,7 +19,7 @@ export default function GardenAuthModal({ onClose, onAuthSuccess }) {
     try {
       const endpoint = isRegister ? 'register' : 'login'
       const result = await authAccount(endpoint, payload)
-      onAuthSuccess(result.token)
+      onAuthSuccess(result)
     } catch (error) {
       setErrorMessage(error.message)
     }

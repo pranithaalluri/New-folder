@@ -1,15 +1,9 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
-
+import { FLOWER_TYPES } from '../constants/flowers.js'
 import './PlantModal.css'
-const FLOWER_TYPES = [
-  'TulipOUTLINED',
-  'RoseOUTLINED',
-  'SunflowerOUTLINED',
-  'DaisyOUTLINED',
-]
-export default function PlantModal({ onPlant, onClose,modal,
-  setModal }) {
+
+export default function PlantModal({ onPlant, onClose, modal, setModal }) {
   const [message, setMessage] = useState('')
 
   const handlePlant = () => {
@@ -31,9 +25,9 @@ export default function PlantModal({ onPlant, onClose,modal,
       >
         <motion.div
           className="plant-modal"
-          initial={{ opacity: 0, scale: 0.92, y: 12 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.92, y: 12 }}
+          initial={{ opacity: 0, scale: 0.7, y: 50, rotate: -3 }}
+          animate={{ opacity: 1, scale: 1, y: 0, rotate: 0 }}
+          exit={{ opacity: 0, scale: 0.7, y: 50, rotate: -3 }}
           transition={{
             type: 'spring',
             stiffness: 240,
@@ -43,68 +37,65 @@ export default function PlantModal({ onPlant, onClose,modal,
           onMouseUp={(e) => e.stopPropagation()}
         >
           <div className="plant-modal-header">
-            <div className="plant-modal-emoji">
-              🌱
-            </div>
-
+            <div className="plant-modal-emoji">🌱</div>
             <h2>Plant a thought</h2>
-
-            <p>
-              leave something in the field
-            </p>
+            <p>leave something in the field</p>
           </div>
-<div className="flower-picker">
-  {FLOWER_TYPES.map((flowerType) => (
-    <button
-      key={flowerType}
-      type="button"
-      onClick={() =>
-        setModal({
-          ...modal,
-          selectedFlower: flowerType,
-        })
-      }
-    >
-      <img
-        src={`/images/flowers/${flowerType}.png`}
-        width="40"
-      />
-    </button>
-  ))}
-</div>
-{modal.selectedFlower && (
-<>
-          <textarea
-            autoFocus
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="write here..."
-            className="plant-modal-input"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault()
-                handlePlant()
-              }
-            }}
-          />
-</>)}
+
+<div>
+            {FLOWER_TYPES.map((flowerType) => {
+              const isSelected = modal.selectedFlower === flowerType
+              return (
+                <button
+                  key={flowerType}
+                  type="button"
+                  className={`flower-option ${isSelected ? 'selected' : ''}`}
+                  onClick={() =>
+                    setModal({
+                      ...modal,
+                      selectedFlower: flowerType,
+                    })
+                  }
+                >
+                  <img
+                    src={`/images/flowers/${flowerType}.png`}
+                    width="40"
+                    alt={flowerType}
+                  />
+                </button>
+              )
+            })}
+            </div>
+        
+
+          {modal.selectedFlower && (
+            <textarea
+              autoFocus
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="write here..."
+              className="plant-modal-input"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault()
+                  handlePlant()
+                }
+              }}
+            />
+          )}
+
           <div className="plant-modal-actions">
-            <button
-              className="plant-modal-cancel"
-              onClick={onClose}
-            >
+            <button className="plant-modal-cancel" onClick={onClose}>
               maybe later
             </button>
 
-            <motion.button
-              whileTap={{ scale: 0.97 }}
-              whileHover={{ scale: 1.02 }}
+            <button
               className="plant-modal-submit"
               onClick={handlePlant}
               disabled={!message.trim()}
             >
               🌱 plant
-            </motion.button>
+            </button>
           </div>
         </motion.div>
       </motion.div>
